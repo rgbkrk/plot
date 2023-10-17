@@ -8,6 +8,12 @@ const document = new DOMParser().parseFromString(
 
 export const Plot = new Proxy(_Plot, {
   get: function (target, prop, receiver) {
+    if (prop === "plot") {
+      return function (...args) {
+        return target[prop].call(this, { document, ...args[0] });
+      };
+    }
+
     if (typeof target[prop] === "function") {
       return function (...args) {
         const result = target[prop].apply(this, args);
